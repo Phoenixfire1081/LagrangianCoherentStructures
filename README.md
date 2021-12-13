@@ -30,3 +30,14 @@ For GPU-parallelization, set _\_enableGPU = True_. Block dimensions and grid dim
 The default mode is serial when both _\_enableMultiProcessing_ and _\_enableGPU_ are False. 
 
 Finally, the code feaures writing the result in either Tecplot ASCII, Amira ASCII or Amira binary formats. Support for RAW3D will be added soon. 
+
+**Please cite my work if you'd like to use my code**
+
+@misc{harikrishnan2021,
+  author = {Harikrishnan, Abhishek},
+  title = {Lagrangian Coherent Structures},
+  year = {2021},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/Phoenixfire1081/LagrangianCoherentStructures/}},
+}
