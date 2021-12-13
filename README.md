@@ -33,11 +33,8 @@ Finally, the code feaures writing the result in either Tecplot ASCII, Amira ASCI
 
 **Please cite my work if you'd like to use my code**
 
-@misc{harikrishnan2021,
-  author = {Harikrishnan, Abhishek},
-  title = {Lagrangian Coherent Structures},
-  year = {2021},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  howpublished = {\url{https://github.com/Phoenixfire1081/LagrangianCoherentStructures/}},
+@article{harikrishnanp0018,\
+  title={P0018: Lagrangian hairpins in atmospheric boundary layers},\
+  author={Harikrishnan, Abhishek Paraswarar and Ernst, Natalia and Ansorge, Cedrick and Klein, Rupert and Vercauteren, Nikki},\
+  publisher={APS}\
 }
