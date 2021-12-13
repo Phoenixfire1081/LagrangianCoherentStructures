@@ -33,8 +33,14 @@ Finally, the code feaures writing the result in either Tecplot ASCII, Amira ASCI
 
 **Please cite my work if you'd like to use my code**
 
+_BibTex_
+
 @article{harikrishnanp0018,\
   title={P0018: Lagrangian hairpins in atmospheric boundary layers},\
   author={Harikrishnan, Abhishek Paraswarar and Ernst, Natalia and Ansorge, Cedrick and Klein, Rupert and Vercauteren, Nikki},\
   publisher={APS}\
 }
+
+_APA_
+
+Harikrishnan, A. P., Ernst, N., Ansorge, C., Klein, R., & Vercauteren, N. P0018: Lagrangian hairpins in atmospheric boundary layers.
