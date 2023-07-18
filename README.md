@@ -45,7 +45,11 @@ Harikrishnan, A. P., Ernst, N., Ansorge, C., Klein, R., & Vercauteren, N. P0018:
 # Gallery
 
 ## Bickley jet
+The parameters used for this example are obtained from [1]. 
 ![Screenshot](Plots/Bickley_perturbed.png)
+
+If we change the amplitudes, eps1 = 0.0075 and eps2 = 0.04 instead of eps1 = 0.075 eps2 = 0.4, then the following ensues:
+![Screenshot](Plots/Bickley_steady.png)
 
 ## Double gyre
 ![Screenshot](Plots/Time_dependent_gyre.png)
@@ -54,3 +58,6 @@ Harikrishnan, A. P., Ernst, N., Ansorge, C., Klein, R., & Vercauteren, N. P0018:
 ## ABC flow
 ![Screenshot](Plots/ABC_slice.png)
 ![Screenshot](Plots/ABC_3D.png)
+
+# References
+[1] Hadjighasem, A., Farazmand, M., Blazevski, D., Froyland, G., & Haller, G. (2017). A critical comparison of Lagrangian methods for coherent structure detection. Chaos: An Interdisciplinary Journal of Nonlinear Science, 27(5).
