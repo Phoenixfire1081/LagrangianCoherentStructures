@@ -47,10 +47,8 @@ Harikrishnan, A. P., Ernst, N., Ansorge, C., Klein, R., & Vercauteren, N. P0018:
 ## Bickley jet
 ![Screenshot](Plots/Bickley_perturbed.png)
 
-## Time-dependent double gyre
+## Double gyre
 ![Screenshot](Plots/Time_dependent_gyre.png)
-
-## Time-independent double gyre
 ![Screenshot](Plots/Time_independent_gyre.png)
 
 ## ABC flow
