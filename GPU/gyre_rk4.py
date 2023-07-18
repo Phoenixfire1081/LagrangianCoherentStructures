@@ -2,12 +2,13 @@ from __future__ import division
 from numba import cuda
 from numba import *
 from math import *
+import numpy as np
 
 @cuda.jit
 def gpu_advected(_appendAdvectedVelocityx, _appendAdvectedVelocityy, XX, YY, t, h, eVal, sign):
 	
 	A = 0.1
-	omega = (2*3.14)/10
+	omega = (2*np.pi)/10
 
 	def fun(x, t, e):
 		
