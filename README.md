@@ -1,13 +1,10 @@
-## Update 03/12/2021
+# Lagrangian coherent structures with Finite-Time Lyaponov Exponent (FTLE)
 
-This page has been setup to support the work presented in the poster: Lagrangian hairpins in atmospheric boundary layers. Please find the poster here: https://doi.org/10.1103/APS.DFD.2021.GFM.P0018. The GPU code developed will be added over time along with a documentation. 
+This page has been setup to support the work presented in the poster, **_Lagrangian hairpins in atmospheric boundary layers_**. Please find the poster here: https://doi.org/10.1103/APS.DFD.2021.GFM.P0018.
 
+This version of the code features all functions as described in the poster. However, reading 2D and 3D data needs to be made more user-friendly. This will be updated over time. 
 
-## Update 13/12/2021
-
-This version of the code features all functions as described in the poster. However, reading 2D and 3D data needs to be made more user-friendly. I will keep updating the code whenever I get time. 
-
-As of now, one can play with the parameters of a Bickley jet, time dependent and independent double gyre and ABC flow data. The code structure takes a module based approach where one or several modules can be activated. For instance, to run a Bickley jet example, one needs to set the following parameters:
+As of now, one can play with the parameters of a _Bickley jet, time dependent and independent double gyre and ABC flow data_. The code structure takes a module based approach where one or several modules can be activated. For instance, to run a Bickley jet example, one needs to set the following parameters:
 
 _\_system = 'Bickley'_\
 _\_integrationType = 'forward' # or 'backward'_\
@@ -31,7 +28,7 @@ The default mode is serial when both _\_enableMultiProcessing_ and _\_enableGPU_
 
 Finally, the code feaures writing the result in either Tecplot ASCII, Amira ASCII or Amira binary formats. Support for RAW3D will be added soon. 
 
-**Please cite my work if you'd like to use my code**
+**Please cite the following work if this code is used**
 
 _BibTex_
 
