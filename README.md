@@ -52,12 +52,16 @@ If we change the amplitudes, eps1 = 0.0075 and eps2 = 0.04 instead of eps1 = 0.0
 ![Screenshot](Plots/Bickley_steady.png)
 
 ## Double gyre
+Similarly, the parameters for the double gyre are obtained from [2].
 ![Screenshot](Plots/Time_dependent_gyre.png)
 ![Screenshot](Plots/Time_independent_gyre.png)
 
 ## ABC flow
+For the ABC flow, the parameters are obtained from [3].
 ![Screenshot](Plots/ABC_slice.png)
 ![Screenshot](Plots/ABC_3D.png)
 
 # References
 [1] Hadjighasem, A., Farazmand, M., Blazevski, D., Froyland, G., & Haller, G. (2017). A critical comparison of Lagrangian methods for coherent structure detection. Chaos: An Interdisciplinary Journal of Nonlinear Science, 27(5).
+[2] https://shaddenlab.berkeley.edu/uploads/LCS-tutorial/examples.html
+[3] Haller, G. (2005). An objective definition of a vortex. Journal of fluid mechanics, 525, 1-26.
