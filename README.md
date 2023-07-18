@@ -41,3 +41,16 @@ _BibTex_
 _APA_
 
 Harikrishnan, A. P., Ernst, N., Ansorge, C., Klein, R., & Vercauteren, N. P0018: Lagrangian hairpins in atmospheric boundary layers.
+
+# Gallery
+
+## Bickley jet
+![Screenshot](Plots/Bickley_perturbed.png)
+
+## Double gyre
+![Screenshot](Plots/Time_dependent_gyre.png)
+![Screenshot](Plots/Time_independent_gyre.png)
+
+## ABC flow
+![Screenshot](Plots/ABC_slice.png)
+![Screenshot](Plots/ABC_3D.png)
