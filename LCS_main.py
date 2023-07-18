@@ -1274,12 +1274,12 @@ if _writeData:
 				
 			amFile.write('\n@2\n'.encode('ascii'))
 
-			for ii in range(len(X1)):
-				amFile.write(pack('f', X1[ii])) 
-			for ii in range(len(Y1)):
-				amFile.write(pack('f', Y1[ii]))
-			for ii in range(len(Z1)):
-				amFile.write(pack('f', Z1[ii]))
+			for ii in range(len(X)):
+				amFile.write(pack('f', X[ii])) 
+			for ii in range(len(Y)):
+				amFile.write(pack('f', Y[ii]))
+			for ii in range(len(Z)):
+				amFile.write(pack('f', Z[ii]))
 				
 			amFile.close()
 		
