@@ -8,7 +8,7 @@ import numpy as np
 def gpu_advected(_appendAdvectedVelocityx, _appendAdvectedVelocityy, XX, YY, t, h, eVal, sign):
 	
 	A = 0.1
-	omega = (2*np.pi)/10
+	omega = (2*3.141592653589793)/10
 
 	def fun(x, t, e):
 		

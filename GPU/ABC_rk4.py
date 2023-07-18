@@ -9,9 +9,9 @@ def gpu_advected(_appendAdvectedVelocityx, _appendAdvectedVelocityy, _appendAdve
 	def abc(tn, x, y, z):
 	
 		q = 0.1
-		omega = 2 * 3.14
-		A0 = 1.732
-		B = 1.414
+		omega = 2 * 3.141592653589793
+		A0 = 1.7320508075688772
+		B = 1.4142135623730951
 		C = 1
 		
 		A = A0 + (1 - exp(-q * tn) * sin(omega * tn))
