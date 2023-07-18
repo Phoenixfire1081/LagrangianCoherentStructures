@@ -12,8 +12,8 @@ def gpu_advected(_appendAdvectedVelocityx, _appendAdvectedVelocityy, XX, YY, t, 
 
 		r0 = 6371e-3
 
-		eps1 = 0.0075
-		eps2 = 0.15
+		eps1 = 0.075
+		eps2 = 0.4
 		eps3 = 0.3
 
 		U = 62.66e-6

@@ -45,7 +45,7 @@ start_time = time.time()
 
 # Supported _system formats: Bickley, Double gyre, ABC, Data
 
-_system = 'ABC'
+_system = 'Bickley'
 
 _integratorType = 'rk4'
 
@@ -154,7 +154,7 @@ if _system == 'Bickley':
 
 	_startTime = 0 * 24 * 60 * 60
 
-	_integrationLength = 40 * 24 * 60 * 60
+	_integrationLength = 11 * 24 * 60 * 60
 
 	_integrationTimeSteps = 600
 	
@@ -247,7 +247,7 @@ elif _system == 'Data':
 
 if _system == 'Bickley':
 
-	_resolution = 100
+	_resolution = 1000
 
 	X = np.linspace(0, 20, _resolution)
 	Y = np.linspace(-3, 3, _resolution)
