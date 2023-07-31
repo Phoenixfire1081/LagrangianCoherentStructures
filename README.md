@@ -61,6 +61,14 @@ For the ABC flow, the parameters are obtained from [3].
 ![Screenshot](Plots/ABC_slice.png)
 ![Screenshot](Plots/ABC_3D.png)
 
+## Channel flow
+Example of FTLE calculated on a channel flow dataset from AG Klein used for testing purposes. This is a result of advecting about 27 million tracers in forward time. 
+![Screenshot](Plots/Channel_flow.png)
+
+## Atmospheric Boundary Layer data
+The parameters for this example can be seen in the poster linked above.
+![Screenshot](Plots/ABL.png)
+
 # References
 [1] Hadjighasem, A., Farazmand, M., Blazevski, D., Froyland, G., & Haller, G. (2017). A critical comparison of Lagrangian methods for coherent structure detection. Chaos: An Interdisciplinary Journal of Nonlinear Science, 27(5). </br>
 [2] https://shaddenlab.berkeley.edu/uploads/LCS-tutorial/examples.html</br>
