@@ -57,8 +57,9 @@ Similarly, the parameters for the double gyre are obtained from [2].
 ![Screenshot](Plots/Time_independent_gyre.png)
 
 ## ABC flow
-For the ABC flow, the parameters are obtained from [3].
+For the ABC flow, the parameters are obtained from [3].</br>
 ![Screenshot](Plots/ABC_slice.png)</br>
+
 ![Screenshot](Plots/ABC_3D.png)
 
 ## Channel flow data
