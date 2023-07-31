@@ -61,7 +61,7 @@ For the ABC flow, the parameters are obtained from [3].
 ![Screenshot](Plots/ABC_slice.png)
 ![Screenshot](Plots/ABC_3D.png)
 
-## Channel flow
+## Channel flow data
 Example of FTLE calculated on a channel flow dataset from AG Klein used for testing purposes. This is a result of advecting about 27 million tracers in forward time. 
 ![Screenshot](Plots/Channel_flow.png)
 
