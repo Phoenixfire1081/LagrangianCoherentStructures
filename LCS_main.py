@@ -17,7 +17,7 @@ from numba import cuda
 
 # Author: Abhishek Harikrishnan
 # Email: abhishek.harikrishnan@fu-berlin.de
-# Last updated: 13-12-2021
+# Last updated: 13-11-2023
 
 #---------------------------------------------------------------------#
 
@@ -288,6 +288,8 @@ elif _system == 'ABC':
 	ZZ = np.ravel(ZZ)
 	
 elif _system == 'Data':
+	
+	# Currently supports 3D data only.
 	
 	from interpolationFast import interp3_CPU
 	from interpolationFastGPU import interp3_GPU
