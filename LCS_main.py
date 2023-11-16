@@ -17,7 +17,7 @@ from numba import cuda
 
 # Author: Abhishek Harikrishnan
 # Email: abhishek.harikrishnan@fu-berlin.de
-# Last updated: 13-11-2023
+# Last updated: 16-11-2023
 
 #---------------------------------------------------------------------#
 
@@ -66,7 +66,7 @@ _writeAmiraBinary = False
 
 # Visualization parameters
 
-_velocityVisualization = False
+_velocityVisualization = True
 _advectionVisualization = False
 _contourFTLE = True
 
@@ -440,8 +440,6 @@ if _computeVelocity:
 	
 	if _velocityVisualization:
 		
-		plt.ion()
-		
 		if _system == 'Bickley' or _system == 'gyre_d' or _system == 'gyre_id':
 			
 			ax = plt.figure().gca()
@@ -450,17 +448,28 @@ if _computeVelocity:
 			
 			ax = plt.figure().gca(projection = '3d')
 	
-	_fileCounter = 0
+	timeCounter = 0
 	
 	for p in _timeSpan:
 		
-		_appendedVelocity = []
+		if _system == 'Bickley' or _system == 'gyre_d' or _system == 'gyre_id':
+		
+			_appendedVelocityx = np.zeros((_resolution**2, _integrationTimeSteps), dtype = np.float32)
+			_appendedVelocityy = np.zeros((_resolution**2, _integrationTimeSteps), dtype = np.float32)
+		
+		elif _system == 'ABC':
+			
+			_appendedVelocityx = np.zeros((_resolution**3, _integrationTimeSteps), dtype = np.float32)
+			_appendedVelocityy = np.zeros((_resolution**3, _integrationTimeSteps), dtype = np.float32)
+			_appendedVelocityz = np.zeros((_resolution**3, _integrationTimeSteps), dtype = np.float32)
 				
 		if _system == 'Data':
 			
-			pass
+			print('Velocity data is already computed. Disable computeVelocity flag..')
 			
 		else:
+			
+			velCounter = 0
 			
 			for i in range(len(XX)):
 			
@@ -468,50 +477,62 @@ if _computeVelocity:
 				
 					_u, _v = psi_vel(XX[i], YY[i], p)
 					
-					_appendedVelocity.append([_u, _v])
+					_appendedVelocityx[velCounter, timeCounter] = _u
+					_appendedVelocityy[velCounter, timeCounter] = _v
 			
 				elif _system == 'gyre_d' or _system == 'gyre_id':
 				
 					_u, _v = psi(XX[i], YY[i], p, eVal)
+
+					_appendedVelocityx[velCounter, timeCounter] = _u
+					_appendedVelocityy[velCounter, timeCounter] = _v
 					
-					_appendedVelocity.append([_u, _v])
 					
 				elif _system == 'ABC':
 					
 					_u, _v, _w = uvw(XX[i], YY[i], ZZ[i], p)
 					
-					_appendedVelocity.append([_u, _v, _w])
+					_appendedVelocityx[velCounter, timeCounter] = _u
+					_appendedVelocityy[velCounter, timeCounter] = _v
+					_appendedVelocityz[velCounter, timeCounter] = _w
+					
+				velCounter += 1
 		
 		if _writeVelocityData:
 			
-			_appendedVelocity = np.array(_appendedVelocity)
-			
-			if np.shape(_appendedVelocity)[1] == 2:
-			
-				fw = open('Velocity/' + str(_fileCounter) + 'u.bin', 'wb')
-				for i in range(len(_appendedVelocity[:, 0])):
-					fw.write(pack('f' , _appendedVelocity[:, 0][i]))
-				fw.close()
-			
-				fw = open('Velocity/' + str(_fileCounter) + 'v.bin', 'wb')
-				for i in range(len(_appendedVelocity[:, 1])):
-					fw.write(pack('f' , _appendedVelocity[:, 1][i]))
-				fw.close()
-				
-				_fileCounter += 1
-			
-		
-		if _velocityVisualization:
-			
-			_appendedVelocity = np.array(_appendedVelocity)
-			
 			if _system == 'Bickley' or _system == 'gyre_d' or _system == 'gyre_id':
 			
-				ax.quiver(XX, YY, _appendedVelocity[:,0], _appendedVelocity[:,1])
+				fw = open('Velocity/' + str(timeCounter) + 'u.bin', 'wb')
+				_appendedVelocityx.tofile(fw)
+				fw.close()
+				
+				fw = open('Velocity/' + str(timeCounter) + 'v.bin', 'wb')
+				_appendedVelocityy.tofile(fw)
+				fw.close()
 				
 			elif _system == 'ABC':
 				
-				ax.quiver(XX, YY, ZZ, _appendedVelocity[:,0], _appendedVelocity[:,1], _appendedVelocity[:,2])
+				fw = open('Velocity/' + str(timeCounter) + 'u.bin', 'wb')
+				_appendedVelocityx.tofile(fw)
+				fw.close()
+				
+				fw = open('Velocity/' + str(timeCounter) + 'v.bin', 'wb')
+				_appendedVelocityy.tofile(fw)
+				fw.close()
+				
+				fw = open('Velocity/' + str(timeCounter) + 'w.bin', 'wb')
+				_appendedVelocityz.tofile(fw)
+				fw.close()
+		
+		if _velocityVisualization:
+			
+			if _system == 'Bickley' or _system == 'gyre_d' or _system == 'gyre_id':
+			
+				ax.quiver(XX, YY, _appendedVelocityx[:, timeCounter], _appendedVelocityy[:, timeCounter])
+				
+			elif _system == 'ABC':
+				
+				ax.quiver(XX, YY, ZZ, _appendedVelocityx[:, timeCounter], _appendedVelocityy[:, timeCounter], _appendedVelocityz[:, timeCounter])
 				
 			elif _system == 'Data':
 				
@@ -519,6 +540,8 @@ if _computeVelocity:
 			
 			plt.pause(0.2)
 			ax.clear()
+		
+		timeCounter += 1
 
 # Advect Particles
 
@@ -540,13 +563,11 @@ if _advectParticles:
 		
 		if _system == 'Bickley' or _system == 'gyre_d' or _system == 'gyre_id':
 		
-			plt.ion()
 			ax = plt.figure().gca()
 			ax.scatter(XX, YY)
 			
 		elif _system == 'ABC' or _system == 'Data':
 			
-			plt.ion()
 			ax = plt.figure().gca(projection = '3d')
 			ax.scatter(XX, YY, ZZ)
 	
