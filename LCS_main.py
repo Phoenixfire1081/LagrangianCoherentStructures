@@ -45,7 +45,7 @@ start_time = time.time()
 
 # Supported _system formats: Bickley, Double gyre, ABC, Data
 
-_system = 'ABC'
+_system = 'gyre_d'
 
 _integratorType = 'rk4'
 
@@ -259,7 +259,7 @@ if _system == 'Bickley':
 
 elif _system == 'gyre_d' or _system == 'gyre_id':
 
-	_resolution = 5000
+	_resolution = 100
 
 	X = np.linspace(0, 2, _resolution)
 	Y = np.linspace(0, 1, _resolution)
@@ -1010,12 +1010,12 @@ if _computeFTLE:
 		XX_reshaped = np.reshape(XX, (_resolution, _resolution))
 		YY_reshaped = np.reshape(YY, (_resolution, _resolution))
 			
-		_FTLE = []
+		_FTLEstep = np.zeros(((_resolution)*(_resolution)), dtype = np.float32) # change dtype as np.complex128 for domain change error
 		
 		xadvected_reshape = np.reshape(_finalAdvectedVelocity[:,0],(_resolution, _resolution))
 		yadvected_reshape = np.reshape(_finalAdvectedVelocity[:,1],(_resolution, _resolution))
 		
-		_FTLE.append(FTLE_compute(xadvected_reshape, yadvected_reshape, XX_reshaped, YY_reshaped, _resolution, _integrationLength))
+		_FTLE = FTLE_compute(xadvected_reshape, yadvected_reshape, XX_reshaped, YY_reshaped, _resolution, _integrationLength, _FTLEstep)
 	
 	if _system == 'ABC' or _system == 'Data':
 		
@@ -1036,25 +1036,29 @@ if _computeFTLE:
 	if _contourFTLE:
 		
 		if _system == 'Bickley' or _system == 'gyre_d' or _system == 'gyre_id':
-		
-			_xShortened, _yShortened = np.meshgrid(np.linspace(X[1], X[-2], _resolution-2), np.linspace(Y[1], Y[-2], _resolution-2), indexing ='ij')
-			_FTLEreshaped = np.reshape(_FTLE, (_resolution-2, _resolution-2))
 			
-			# plt.ion()
+			# 2D plot
+		
+			_xShortened, _yShortened = np.meshgrid(np.linspace(X[0], X[-1], _resolution), np.linspace(Y[0], Y[-1], _resolution), indexing ='ij')
+			_FTLEreshaped = np.reshape(_FTLE, (_resolution, _resolution))
+
 			ax = plt.figure().gca()
 			fig = ax.contourf(_xShortened, _yShortened, _FTLEreshaped, cmap = cm.bone)
 			plt.colorbar(fig, ax = ax)
 		
 		elif _system == 'ABC' or _system == 'Data':
 			
-			_xShortened, _yShortened, _zShortened = np.meshgrid(np.linspace(X[1], X[-1], _resolutionx), np.linspace(Y[0], Y[-1], _resolutiony), np.linspace(Z[0], Z[-1], _resolutionz), indexing ='ij')
+			# 2D slice of a 3D plot
+			
+			_xShortened, _yShortened, _zShortened = np.meshgrid(np.linspace(X[0], X[-1], _resolutionx), np.linspace(Y[0], Y[-1], _resolutiony), np.linspace(Z[0], Z[-1], _resolutionz), indexing ='ij')
 			_FTLEreshaped = np.reshape(_FTLE, (_resolutionx, _resolutiony, _resolutionz))
 			
 			print('NOTE: Only a 2D slice is shown')
-			# plt.ion()
 			ax = plt.figure().gca()
 			fig = ax.contourf(_xShortened[:, :, 0], _yShortened[:, :, 0], _FTLEreshaped[:, :, 0], cmap = cm.bone)
 			plt.colorbar(fig, ax = ax)
+		
+		plt.show() # show the plot
 
 # Write data
 

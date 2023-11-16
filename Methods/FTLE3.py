@@ -1,7 +1,7 @@
 from __future__ import division
 from numpy import linalg as LA
 import numpy as np
-from numba import jit, prange
+from numba import jit
 import math
 
 @jit(nopython=True)
