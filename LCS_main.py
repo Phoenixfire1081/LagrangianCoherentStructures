@@ -45,7 +45,7 @@ start_time = time.time()
 
 # Supported _system formats: Bickley, Double gyre, ABC, Data
 
-_system = 'Bickley'
+_system = 'ABC'
 
 _integratorType = 'rk4'
 
@@ -93,7 +93,7 @@ if _enableMultiProcessing:
 	
 	print ('Available number of cores:', _nCPU)
 	
-	_CPU = 12
+	_CPU = 2
 	
 	print ('Using', _CPU, 'cores...')
 	
@@ -247,7 +247,7 @@ elif _system == 'Data':
 
 if _system == 'Bickley':
 
-	_resolution = 1000
+	_resolution = 100
 
 	X = np.linspace(0, 20, _resolution)
 	Y = np.linspace(-3, 3, _resolution)
@@ -259,7 +259,7 @@ if _system == 'Bickley':
 
 elif _system == 'gyre_d' or _system == 'gyre_id':
 
-	_resolution = 100
+	_resolution = 5000
 
 	X = np.linspace(0, 2, _resolution)
 	Y = np.linspace(0, 1, _resolution)
@@ -271,7 +271,7 @@ elif _system == 'gyre_d' or _system == 'gyre_id':
 	
 elif _system == 'ABC':
 	
-	_resolution = 256
+	_resolution = 128
 	
 	_resolutionx = _resolution
 	_resolutiony = _resolution
@@ -340,9 +340,6 @@ elif _system == 'Data':
 
 	_uvwData = np.zeros((_resolution**3, 3, _integrationTimeSteps))
 	
-	if _computeLVGT:
-		_uvwDataAlt = np.zeros((_resolution**3, 3, _integrationTimeSteps))
-	
 	# Data is read in as zFastest
 
 	for i in range(_integrationTimeSteps):
@@ -363,9 +360,6 @@ elif _system == 'Data':
 		val = interp3_GPU[int(np.ceil(len(XX)/256)), 256](XX, YY, ZZ, np.reshape(_u, [_dataResolutionx, _dataResolutiony, _dataResolutionz]), Xd, Yd, Zd, cArrGPU)
 		_uN = cArrGPU.copy_to_host()
 		
-		if _computeLVGT:
-			_uNalt = _ufun(np.column_stack([XXalt, YYalt, ZZalt]))
-		
 		del _u
 		
 		_v = array.array('f')
@@ -376,9 +370,6 @@ elif _system == 'Data':
 		val = interp3_GPU[int(np.ceil(len(XX)/256)), 256](XX, YY, ZZ, np.reshape(_v, [_dataResolutionx, _dataResolutiony, _dataResolutionz]), Xd, Yd, Zd, cArrGPU)
 		_vN = cArrGPU.copy_to_host()
 		
-		if _computeLVGT:
-			_vNalt = _vfun(np.column_stack([XXalt, YYalt, ZZalt]))
-		
 		del _v
 		
 		_w = array.array('f')
@@ -388,9 +379,6 @@ elif _system == 'Data':
 		cArrGPU = cuda.to_device(cArr)
 		val = interp3_GPU[int(np.ceil(len(XX)/256)), 256](XX, YY, ZZ, np.reshape(_w, [_dataResolutionx, _dataResolutiony, _dataResolutionz]), Xd, Yd, Zd, cArrGPU)
 		_wN = cArrGPU.copy_to_host()
-		
-		if _computeLVGT:
-			_wNalt = _wfun(np.column_stack([XXalt, YYalt, ZZalt]))
 		
 		del _w
 		
@@ -613,10 +601,6 @@ if _advectParticles:
 			else:
 				
 				_appendAdvectedVelocity = np.zeros((len(XX), 3))
-				
-				if _computeLVGT:
-					
-					_appendAdvectedVelocityAlt = np.zeros((len(XX), 3))
 		
 		if _enableMultiProcessing:
 			
@@ -653,10 +637,6 @@ if _advectParticles:
 					elif _system == 'Data':
 						
 						_uNew, _vNew, _wNew = rk4_data(XX[i], YY[i], ZZ[i], p, uvw, _timeStepper, X, Y, Z, _uReshaped, _vReshaped, _wReshaped, sign)
-						
-						if _computeLVGT:
-							
-							_uNewAlt, _vNewAlt, _wNewAlt = rk4_data(XXalt[i], YYalt[i], ZZalt[i], p, uvw, _timeStepper, Xalt, Y, Z, _uvwDataAlt, sign)
 				
 				else:
 					
@@ -676,23 +656,13 @@ if _advectParticles:
 						
 						_uNew, _vNew, _wNew = rk4_data(_xNew[i], _yNew[i], _zNew[i], p, uvw, _timeStepper, X, Y, Z, _uReshaped, _vReshaped, _wReshaped, sign)
 						
-						if _computeLVGT:
-							
-							_uNewAlt, _vNewAlt, _wNewAlt = rk4_data(_xNewAlt[i], _yNewAlt[i], _zNewAlt[i], p, uvw, _timeStepper, Xalt, Y, Z, _uvwDataAlt, sign)
-						
 				if _system == 'Bickley' or _system == 'gyre_id' or _system == 'gyre_d':
 					
 					return _uNew, _vNew
 				
 				else:
-					
-					if _computeLVGT:
 						
-						return _uNew, _vNew, _wNew,_uNewAlt, _vNewAlt, _wNewAlt
-					
-					else:
-						
-						return _uNew, _vNew, _wNew
+					return _uNew, _vNew, _wNew
 				
 			pool = Pool(processes = _CPU)
 			_val = pool.map(mpiAdvect, range(len(XX)))
@@ -710,21 +680,9 @@ if _advectParticles:
 				
 			elif _system == 'ABC' or _system == 'Data':
 				
-				if _computeLVGT:
-					
-					_appendAdvectedVelocity[:, 0] = _appendAdvectedVelocity[:, 0] + _val[:, 0]
-					_appendAdvectedVelocity[:, 1] = _appendAdvectedVelocity[:, 1] + _val[:, 1]
-					_appendAdvectedVelocity[:, 2] = _appendAdvectedVelocity[:, 2] + _val[:, 2]
-					
-					_appendAdvectedVelocityAlt[:, 0] = _appendAdvectedVelocityAlt[:, 0] + _val[:, 3]
-					_appendAdvectedVelocityAlt[:, 1] = _appendAdvectedVelocityAlt[:, 1] + _val[:, 4]
-					_appendAdvectedVelocityAlt[:, 2] = _appendAdvectedVelocityAlt[:, 2] + _val[:, 5]
-					
-				else:
-				
-					_appendAdvectedVelocity[:, 0] = _appendAdvectedVelocity[:, 0] + _val[:, 0]
-					_appendAdvectedVelocity[:, 1] = _appendAdvectedVelocity[:, 1] + _val[:, 1]
-					_appendAdvectedVelocity[:, 2] = _appendAdvectedVelocity[:, 2] + _val[:, 2]
+				_appendAdvectedVelocity[:, 0] = _appendAdvectedVelocity[:, 0] + _val[:, 0]
+				_appendAdvectedVelocity[:, 1] = _appendAdvectedVelocity[:, 1] + _val[:, 1]
+				_appendAdvectedVelocity[:, 2] = _appendAdvectedVelocity[:, 2] + _val[:, 2]
 				
 				del _val
 				
@@ -772,14 +730,9 @@ if _advectParticles:
 					_vReshaped = np.ascontiguousarray(np.float32(np.reshape(_uvwData[:, 1, 0], [_resolution, _resolution, _resolution])))
 					_wReshaped = np.ascontiguousarray(np.float32(np.reshape(_uvwData[:, 2, 0], [_resolution, _resolution, _resolution])))
 					
-					# _uReshaped2 = np.ascontiguousarray(np.float32(np.reshape(_uvwData[:, 0, 1], [_resolution, _resolution, _resolution])))
-					# _vReshaped2 = np.ascontiguousarray(np.float32(np.reshape(_uvwData[:, 1, 1], [_resolution, _resolution, _resolution])))
-					# _wReshaped2 = np.ascontiguousarray(np.float32(np.reshape(_uvwData[:, 2, 1], [_resolution, _resolution, _resolution])))
-					
 					_localTime = time.time()
 					
 					gpu_advected[_gridDim, _blockDim](_appendAdvectedVelocityxGPU, _appendAdvectedVelocityyGPU, _appendAdvectedVelocityzGPU, np.float32(X), np.float32(Y), np.float32(Z), np.float32(XX), np.float32(YY), np.float32(ZZ), np.float32(p), np.float32(_timeStepper), _uReshaped, _vReshaped, _wReshaped, sign)
-					# gpu_advected[_gridDim, _blockDim](_appendAdvectedVelocityxGPU, _appendAdvectedVelocityyGPU, _appendAdvectedVelocityzGPU, np.float32(X), np.float32(Y), np.float32(Z), np.float32(XX), np.float32(YY), np.float32(ZZ), np.float32(p), np.float32(_timeStepper), _uReshaped, _vReshaped, _wReshaped, _uReshaped2, _vReshaped2, _wReshaped2)
 					
 					print ('GPU compute for ', p, 'completed in', time.time() - _localTime, 's')
 					
@@ -796,8 +749,6 @@ if _advectParticles:
 					_appendAdvectedVelocity[:, 2] = _appendAdvectedVelocityz
 					
 					del _appendAdvectedVelocityxGPU, _appendAdvectedVelocityyGPU, _appendAdvectedVelocityzGPU, _uReshaped, _vReshaped, _wReshaped
-					
-					# raise SystemError
 					
 				elif _system == 'Bickley':
 					
@@ -848,8 +799,6 @@ if _advectParticles:
 					_appendAdvectedVelocity[:, 1] = _appendAdvectedVelocityy
 					
 					del _appendAdvectedVelocityxGPU, _appendAdvectedVelocityyGPU
-					
-					# raise SystemError
 			
 			else:
 				
@@ -936,15 +885,9 @@ if _advectParticles:
 					
 					_localTime = time.time()
 					
-					# print cuda_driver.mem_get_info()
-					
 					_uReshaped = np.ascontiguousarray(np.float32(np.reshape(_uvwData[:, 0, _timeCounter], [_resolution, _resolution, _resolution])))
 					_vReshaped = np.ascontiguousarray(np.float32(np.reshape(_uvwData[:, 1, _timeCounter], [_resolution, _resolution, _resolution])))
 					_wReshaped = np.ascontiguousarray(np.float32(np.reshape(_uvwData[:, 2, _timeCounter], [_resolution, _resolution, _resolution])))
-					
-					# _uReshaped2 = np.ascontiguousarray(np.float32(np.reshape(_uvwData[:, 0, int(p)+1], [_resolution, _resolution, _resolution])))
-					# _vReshaped2 = np.ascontiguousarray(np.float32(np.reshape(_uvwData[:, 1, int(p)+1], [_resolution, _resolution, _resolution])))
-					# _wReshaped2 = np.ascontiguousarray(np.float32(np.reshape(_uvwData[:, 2, int(p)+1], [_resolution, _resolution, _resolution])))
 					
 					_xNew = np.ascontiguousarray(_xNew)
 					_yNew = np.ascontiguousarray(_yNew)
@@ -1097,7 +1040,7 @@ if _computeFTLE:
 			_xShortened, _yShortened = np.meshgrid(np.linspace(X[1], X[-2], _resolution-2), np.linspace(Y[1], Y[-2], _resolution-2), indexing ='ij')
 			_FTLEreshaped = np.reshape(_FTLE, (_resolution-2, _resolution-2))
 			
-			plt.ion()
+			# plt.ion()
 			ax = plt.figure().gca()
 			fig = ax.contourf(_xShortened, _yShortened, _FTLEreshaped, cmap = cm.bone)
 			plt.colorbar(fig, ax = ax)
@@ -1108,7 +1051,7 @@ if _computeFTLE:
 			_FTLEreshaped = np.reshape(_FTLE, (_resolutionx, _resolutiony, _resolutionz))
 			
 			print('NOTE: Only a 2D slice is shown')
-			plt.ion()
+			# plt.ion()
 			ax = plt.figure().gca()
 			fig = ax.contourf(_xShortened[:, :, 0], _yShortened[:, :, 0], _FTLEreshaped[:, :, 0], cmap = cm.bone)
 			plt.colorbar(fig, ax = ax)
